@@ -505,13 +505,13 @@ public class TestArrayBatch {
 				Thread c = new Thread(router);
 				c.start();
 
-				// Thread d = new Thread(changer);
-				// d.start();
+				Thread d = new Thread(changer);
+				d.start();
 
 				a.join();
 				b.join();
 				c.join();
-				// d.join();
+				d.join();
 
 				Long finish = System.currentTimeMillis();
 

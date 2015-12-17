@@ -30,17 +30,15 @@ public class ChangerBatch implements IgniteCallable<Map<Integer, Integer>> {
 		Map<Integer, Integer> result = new HashMap<>(list.size());
 		
 		IgniteCache<Integer, DocumentContainer> cache = ignite.cache("CACHE_NAME");
-		IgniteCache<String, SortedSet<ClientPosition>> clientPositionCache = ignite.cache("ClientPositionCache");
+		IgniteCache<String, Collection<ClientPosition>> clientPositionCache = ignite.cache("ClientPositionCache");
 		
 		for (int i : list) {
 			DocumentContainer dc = cache.localPeek(i);
 			
-//			System.out.println("change on node " + i);
-			
 			String ks = dc.route;
 	
 			//TODO Lock Position
-			SortedSet<ClientPosition> positions = clientPositionCache.get(ks);
+			Collection<ClientPosition> positions = clientPositionCache.get(ks);
 			
 			for (ClientPosition p : positions) {
 				if (p.position.compareTo(dc.document.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getIntrBkSttlmAmt().getValue()) < 0) {
