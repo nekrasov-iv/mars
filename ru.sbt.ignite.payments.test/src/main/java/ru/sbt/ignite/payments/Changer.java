@@ -1,5 +1,6 @@
 package ru.sbt.ignite.payments;
 
+import java.util.Collection;
 import java.util.SortedSet;
 
 import org.apache.ignite.IgniteCache;
@@ -9,12 +10,12 @@ public class Changer implements IgniteCallable<Integer> {
 	private static final long serialVersionUID = 1L;
 
 	IgniteCache<Integer, DocumentContainer> cache = null;
-	IgniteCache<String, SortedSet<ClientPosition>> clientPositionCache = null;
+	IgniteCache<String, Collection<ClientPosition>> clientPositionCache = null;
 	
 	Integer i = null;
 	
 	public Changer(IgniteCache<Integer, DocumentContainer> cache,
-			IgniteCache<String, SortedSet<ClientPosition>> clientPositionCache) 
+			IgniteCache<String, Collection<ClientPosition>> clientPositionCache) 
 	{
 		this.cache = cache;
 		this.clientPositionCache = clientPositionCache;
@@ -34,7 +35,7 @@ public class Changer implements IgniteCallable<Integer> {
 
 		//TO Lock Position
 		
-		SortedSet<ClientPosition> positions = clientPositionCache.get(ks);
+		Collection<ClientPosition> positions = clientPositionCache.get(ks);
 		
 		for (ClientPosition p : positions) {
 //			System.out.println("Position : " + p.position.intValue() + " | " + dc.document.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getIntrBkSttlmAmt().getValue());

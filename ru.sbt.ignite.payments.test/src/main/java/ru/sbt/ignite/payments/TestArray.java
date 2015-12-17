@@ -5,7 +5,11 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -41,7 +45,7 @@ public class TestArray {
 
 		final String ClientPositionCache = "ClientPositionCache";
 		
-		try (final Ignite ignite = Ignition.start("C:\\Distr\\gridgain-community-fabric-1.4.1\\examples\\config\\example-ignite.xml")) {
+		try (final Ignite ignite = Ignition.start("config/example-ignite.xml")) {
             CacheConfiguration<Integer, DocumentContainer> cacheCfg = new CacheConfiguration<>(CACHE_NAME);
 
             cacheCfg.setCacheMode(CacheMode.PARTITIONED);
@@ -67,19 +71,19 @@ public class TestArray {
             final IgniteCache<AccKorrespGammaKey, AccKorrespGamma> accKorrespGammaCache = ignite.getOrCreateCache(cacheCfg3);
 
             
-            CacheConfiguration<String, SortedSet<ClientPosition>> cacheCfg4 = new CacheConfiguration<>(ClientPositionCache);
+            CacheConfiguration<String, Collection<ClientPosition>> cacheCfg4 = new CacheConfiguration<>(ClientPositionCache);
 
             cacheCfg4.setCacheMode(CacheMode.PARTITIONED);
             cacheCfg4.setBackups(1);
             cacheCfg4.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
             
-            final IgniteCache<String, SortedSet<ClientPosition>> clientPositionCache = ignite.getOrCreateCache(cacheCfg4);
+            final IgniteCache<String, Collection<ClientPosition>> clientPositionCache = ignite.getOrCreateCache(cacheCfg4);
             
             
             
             final int capacity = 10000;
 			
-			// Очередь вставки
+			// Очередь вставкиq
 			final Counter putQueueCounter = new Counter();
 			
 			// Очередь проверок
@@ -103,12 +107,12 @@ public class TestArray {
 			
 			
 			
-			
-			final String xml = new String(Files.readAllBytes(Paths.get("C:\\Локальные документы\\PDO\\pacs.008.001.05\\pacs.008.001.05_01.xml")));
+			File file = new File(TestArray.class.getClassLoader().getResource("META-INF/xml/pacs.008.001.05_01.xml").toURI().getPath());
+			final String xml = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 //			StringReader reader = new StringReader(xml);
 			
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = sf.newSchema(new File("C:\\Локальные документы\\PDO\\pacs.008.001.05\\pacs.008.001.05.xsd"));
+			Schema schema = sf.newSchema(new File(TestArray.class.getClassLoader().getResource("META-INF/xml/pacs.008.001.05.xsd").toURI().getPath()));
 			
 			JAXBContext jaxbContext = JAXBContext.newInstance(Document.class);
 			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -183,7 +187,8 @@ public class TestArray {
 			accKorrespGammaCache.put(akgk, akg);
 			
 			
-			SortedSet<ClientPosition> cps = new TreeSet<>();
+			List<ClientPosition> cps = new ArrayList();
+			Collections.sort(cps);
 			
 			ClientPosition cp = new ClientPosition();
 			cp.KS = "1234567890";
@@ -205,7 +210,7 @@ public class TestArray {
 			
 			clientPositionCache.put("1234567890", cps);
 			
-			cps = new TreeSet<>();
+			cps = new ArrayList<>();
 			
 			cp = new ClientPosition();
 			cp.KS = "2234567890";

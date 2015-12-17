@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -67,13 +68,13 @@ public class TestQueue {
             final IgniteCache<AccKorrespGammaKey, AccKorrespGamma> accKorrespGammaCache = ignite.getOrCreateCache(cacheCfg3);
 
             
-            CacheConfiguration<String, SortedSet<ClientPosition>> cacheCfg4 = new CacheConfiguration<>(ClientPositionCache);
+            CacheConfiguration<String, Collection<ClientPosition>> cacheCfg4 = new CacheConfiguration<>(ClientPositionCache);
 
             cacheCfg4.setCacheMode(CacheMode.PARTITIONED);
             cacheCfg4.setBackups(1);
             cacheCfg4.setWriteSynchronizationMode(CacheWriteSynchronizationMode.FULL_SYNC);
             
-            final IgniteCache<String, SortedSet<ClientPosition>> clientPositionCache = ignite.getOrCreateCache(cacheCfg4);
+            final IgniteCache<String, Collection<ClientPosition>> clientPositionCache = ignite.getOrCreateCache(cacheCfg4);
             
             
             
