@@ -36,6 +36,7 @@ import com.sbt.iso20022.pacs_008_001_05.Document;
 public class TestArrayBatch {
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
+		// test test test
 		Ignition.setClientMode(true);
 
 		final String CACHE_NAME = "CACHE_NAME";
